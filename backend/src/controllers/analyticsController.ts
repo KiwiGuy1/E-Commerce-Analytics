@@ -1,11 +1,11 @@
 import { Request, Response } from "express";
-import Product from "../models/Product";
+import Product, { IProduct } from "../models/Product";
 import Sale from "../models/Sale";
 
 export const getAnalytics = async (req: Request, res: Response) => {
   try {
-    // Always populate productId so it's a product object
-    const products: Array<{ _id: any; name: string }> = await Product.find();
+    // Fetch all products and sales, populate productId in sales
+    const products: IProduct[] = await Product.find();
     const sales = await Sale.find().populate("productId");
 
     // Calculate total sales and revenue
@@ -18,7 +18,9 @@ export const getAnalytics = async (req: Request, res: Response) => {
     // Find top product by sales quantity
     const productSalesCount: { [key: string]: number } = {};
     sales.forEach((sale) => {
-      const id = (sale.productId as typeof Product.prototype)._id.toString();
+      // Type assertion: productId is populated
+      const product = sale.productId as IProduct;
+      const id = product._id.toString();
       productSalesCount[id] = (productSalesCount[id] || 0) + sale.quantity;
     });
 

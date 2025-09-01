@@ -22,27 +22,24 @@ const productSchema = new mongoose.Schema({
   description: String,
   tags: [String],
 });
-
 const saleSchema = new mongoose.Schema({
   userId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
   productId: { type: mongoose.Schema.Types.ObjectId, ref: "Product" },
   quantity: Number,
   price: Number,
   date: Date,
-  // For ML: add features like customer segment, payment method, etc.
   customerSegment: String,
   paymentMethod: String,
 });
 
-// Create models
 const User = mongoose.model("User", userSchema);
 const Product = mongoose.model("Product", productSchema);
 const Sale = mongoose.model("Sale", saleSchema);
 
 async function seed() {
-  await mongoose.connection.dropDatabase(); // Clear old data
+  await mongoose.connection.dropDatabase();
 
-  // Create dummy users
+  // Create more users
   const users = await User.insertMany([
     {
       name: "Alice Johnson",
@@ -62,9 +59,27 @@ async function seed() {
       password: "adminhashed",
       role: "admin",
     },
+    {
+      name: "Charlie Brown",
+      email: "charlie@example.com",
+      password: "hashed3",
+      role: "customer",
+    },
+    {
+      name: "Dana White",
+      email: "dana@example.com",
+      password: "hashed4",
+      role: "customer",
+    },
+    {
+      name: "Eve Black",
+      email: "eve@example.com",
+      password: "hashed5",
+      role: "customer",
+    },
   ]);
 
-  // Create dummy products
+  // Create more products
   const products = await Product.insertMany([
     {
       name: "Wireless Mouse",
@@ -90,40 +105,101 @@ async function seed() {
       description: "Non-slip yoga mat",
       tags: ["fitness", "accessories"],
     },
+    {
+      name: "Bluetooth Headphones",
+      category: "Electronics",
+      price: 89.99,
+      stock: 60,
+      description: "Noise-cancelling headphones",
+      tags: ["electronics", "audio"],
+    },
+    {
+      name: "Water Bottle",
+      category: "Fitness",
+      price: 15.99,
+      stock: 200,
+      description: "Stainless steel water bottle",
+      tags: ["fitness", "accessories"],
+    },
+    {
+      name: "Smart Watch",
+      category: "Electronics",
+      price: 199.99,
+      stock: 30,
+      description: "Fitness tracking smart watch",
+      tags: ["electronics", "wearable"],
+    },
+    {
+      name: "Football",
+      category: "Sports",
+      price: 34.99,
+      stock: 40,
+      description: "Professional football",
+      tags: ["sports", "equipment"],
+    },
+    {
+      name: "Tennis Racket",
+      category: "Sports",
+      price: 79.99,
+      stock: 25,
+      description: "Lightweight tennis racket",
+      tags: ["sports", "equipment"],
+    },
+    {
+      name: "Gym Bag",
+      category: "Fitness",
+      price: 49.99,
+      stock: 70,
+      description: "Spacious gym bag",
+      tags: ["fitness", "accessories"],
+    },
+    {
+      name: "Cycling Helmet",
+      category: "Sports",
+      price: 69.99,
+      stock: 35,
+      description: "Safety cycling helmet",
+      tags: ["sports", "equipment"],
+    },
   ]);
 
-  // Create dummy sales (for analytics & ML)
-  await Sale.insertMany([
-    {
-      userId: users[0]._id,
-      productId: products[0]._id,
-      quantity: 1,
-      price: 25.99,
-      date: new Date("2024-07-01"),
-      customerSegment: "Young Professional",
-      paymentMethod: "Credit Card",
-    },
-    {
-      userId: users[1]._id,
-      productId: products[1]._id,
-      quantity: 2,
-      price: 59.99,
-      date: new Date("2024-07-02"),
-      customerSegment: "Athlete",
-      paymentMethod: "PayPal",
-    },
-    {
-      userId: users[0]._id,
-      productId: products[2]._id,
-      quantity: 1,
-      price: 29.99,
-      date: new Date("2024-07-03"),
-      customerSegment: "Yoga Enthusiast",
-      paymentMethod: "Credit Card",
-    },
-  ]);
+  // Create more sales (randomized for variety)
+  const paymentMethods = ["Credit Card", "PayPal", "Apple Pay", "Google Pay"];
+  const customerSegments = [
+    "Young Professional",
+    "Athlete",
+    "Yoga Enthusiast",
+    "Tech Savvy",
+    "Outdoor Lover",
+    "Fitness Buff",
+  ];
 
-  console.log("Database seeded for analytics and ML!");
+  const salesData = [];
+  for (let i = 0; i < 50; i++) {
+    const user = users[Math.floor(Math.random() * users.length)];
+    const product = products[Math.floor(Math.random() * products.length)];
+    const quantity = Math.floor(Math.random() * 5) + 1;
+    const price = product.price;
+    const date = new Date(2024, 6, Math.floor(Math.random() * 30) + 1); // July 2024
+    const customerSegment =
+      customerSegments[Math.floor(Math.random() * customerSegments.length)];
+    const paymentMethod =
+      paymentMethods[Math.floor(Math.random() * paymentMethods.length)];
+
+    salesData.push({
+      userId: user._id,
+      productId: product._id,
+      quantity,
+      price,
+      date,
+      customerSegment,
+      paymentMethod,
+    });
+  }
+
+  await Sale.insertMany(salesData);
+
+  console.log("Database seeded with lots of data for analytics and ML!");
   mongoose.disconnect();
 }
 

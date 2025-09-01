@@ -1,6 +1,8 @@
 import mongoose, { Schema, Document } from "mongoose";
 
+// In Product.ts
 export interface IProduct extends Document {
+  _id: mongoose.Types.ObjectId | string;
   name: string;
   category: string;
   price: number;
