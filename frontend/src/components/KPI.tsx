@@ -4,13 +4,37 @@ interface KPIProps {
   label: string;
   value: string | number;
   color?: string;
+  sublabel?: string;
+  align?: "start" | "center" | "end";
+  className?: string;
 }
 
-const KPI: React.FC<KPIProps> = ({ label, value, color = "text-blue-600" }) => (
-  <div className="bg-white rounded-lg shadow p-6 flex flex-col items-center">
-    <span className="text-lg font-semibold text-gray-500">{label}</span>
-    <span className={`text-2xl font-bold mt-2 ${color}`}>{value}</span>
-  </div>
-);
+const KPI: React.FC<KPIProps> = ({
+  label,
+  value,
+  color = "text-blue-600",
+  sublabel,
+  align = "start",
+  className = "",
+}) => {
+  const alignClass =
+    align === "center"
+      ? "items-center"
+      : align === "end"
+      ? "items-end"
+      : "items-start";
+
+  return (
+    <div className={`flex flex-col ${alignClass} ${className}`}>
+      <span className="text-xs font-medium uppercase tracking-wide text-slate-500">
+        {label}
+      </span>
+      <span className={`mt-1 text-3xl font-semibold ${color}`}>{value}</span>
+      {sublabel && (
+        <span className="mt-1 text-xs text-slate-400">{sublabel}</span>
+      )}
+    </div>
+  );
+};
 
 export default KPI;

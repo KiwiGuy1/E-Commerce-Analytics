@@ -14,6 +14,9 @@ app.use(express.json());
 import analyticsRoutes from "./routes/analytics";
 app.use("/api/analytics", analyticsRoutes);
 
+import usersRouter from "./routes/users";
+
+app.use("/api/users", usersRouter);
 mongoose
   .connect(process.env.MONGO_URI || "", {})
   .then(() => console.log("MongoDB connected"))

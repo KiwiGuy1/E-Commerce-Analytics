@@ -9,21 +9,24 @@ export const Nav: React.FC = () => {
           E-Commerce Analytics
         </Link>
         <div className="flex space-x-6">
-          <a href="/dashboard" className="text-gray-600 hover:text-blue-600">
+          <Link href="/" className="text-gray-600 hover:text-blue-600">
             Dashboard
-          </a>
-          <a href="/sales" className="text-gray-600 hover:text-blue-600">
-            Sales
-          </a>
-          <a href="/customers" className="text-gray-600 hover:text-blue-600">
-            Customers
-          </a>
-          <a href="/products" className="text-gray-600 hover:text-blue-600">
+          </Link>
+          <Link href="/sales" className="text-gray-600 hover:text-blue-600">
+            Sales / Orders
+          </Link>
+          <Link href="/products" className="text-gray-600 hover:text-blue-600">
             Products
-          </a>
-          <a href="/reports" className="text-gray-600 hover:text-blue-600">
-            Reports
-          </a>
+          </Link>
+          <Link href="/customers" className="text-gray-600 hover:text-blue-600">
+            Customers
+          </Link>
+          <Link href="/analytics" className="text-gray-600 hover:text-blue-600">
+            Analytics / Reports
+          </Link>
+          <Link href="/settings" className="text-gray-600 hover:text-blue-600">
+            Settings
+          </Link>
         </div>
       </div>
       <div>

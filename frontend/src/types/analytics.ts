@@ -23,6 +23,13 @@ export interface Product {
   description?: string;
   tags?: string[];
 }
+export interface User {
+  _id: string;
+  name: string;
+  email: string;
+  role: string;
+  createdAt: string;
+}
 
 export interface AnalyticsData {
   totalSales: number;

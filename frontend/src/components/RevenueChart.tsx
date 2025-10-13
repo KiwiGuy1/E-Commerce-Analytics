@@ -23,11 +23,12 @@ Chart.register(
 
 interface RevenueChartProps {
   revenue: number[];
+  labels: string[];
 }
 
-const RevenueChart: React.FC<RevenueChartProps> = ({ revenue }) => {
+const RevenueChart: React.FC<RevenueChartProps> = ({ revenue, labels }) => {
   const data = {
-    labels: revenue.map((_, i) => `Month ${i + 1}`),
+    labels: labels, // Use passed labels instead of generating fake ones
     datasets: [
       {
         label: "Revenue",
