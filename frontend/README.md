@@ -32,7 +32,13 @@ This structure keeps transport logic centralized and UI components focused on re
 
 ## Environment setup
 
-Create `.env.local` in this folder:
+Copy the example file:
+
+```bash
+copy .env.example .env.local
+```
+
+Expected value:
 
 ```env
 NEXT_PUBLIC_API_URL=http://localhost:5000/api

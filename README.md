@@ -50,7 +50,17 @@ Full-stack analytics platform for monitoring e-commerce performance in near real
 
 ## Environment variables
 
-Create `backend/.env` with:
+Copy examples instead of creating files manually:
+
+```bash
+copy .env.example .env
+copy backend\\.env.example backend\\.env
+copy frontend\\.env.example frontend\\.env.local
+```
+
+If you prefer manual setup, use these values.
+
+`backend/.env`:
 
 ```env
 PORT=5000
@@ -63,13 +73,13 @@ POSTGRES_DB=ecommerce_analytics
 DATABASE_URL=postgresql://postgres:postgres@localhost:5432/ecommerce_analytics
 ```
 
-Create `frontend/.env.local` with:
+`frontend/.env.local`:
 
 ```env
 NEXT_PUBLIC_API_URL=http://localhost:5000/api
 ```
 
-Optional: create a root `.env` (used by Docker Compose variable interpolation):
+Root `.env` (used by Docker Compose variable interpolation):
 
 ```env
 POSTGRES_USER=postgres
@@ -101,6 +111,18 @@ Stop containers:
 ```bash
 npm run docker:down
 ```
+
+## Interviewer quick start
+
+For a reviewer/interviewer, these are the only commands needed:
+
+```bash
+npm install
+npm run docker:up
+npm run docker:test
+```
+
+Then open `http://localhost:3000`.
 
 ## Getting started
 
@@ -158,6 +180,12 @@ npm run dev
 - `GET /api/analytics` — aggregate KPI and analytics payload
 - `GET /api/users` — user/customer list
 - `POST /api/sales` — create a sale/order record
+
+## Security note
+
+- This repository uses local development placeholder credentials only.
+- No production tokens, private keys, or cloud credentials are required.
+- Keep `.env` files local (already gitignored) and share only `*.env.example`.
 
 ## Highlights for portfolio/resume
 
