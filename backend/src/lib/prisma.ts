@@ -4,7 +4,7 @@ import { Pool } from "pg";
 import { PrismaClient } from "../generated/prisma/client";
 
 dotenv.config();
-dotenv.config({ path: ".env.local", override: true });
+dotenv.config({ path: ".env.local" });
 
 const connectionString = process.env.DATABASE_URL;
 

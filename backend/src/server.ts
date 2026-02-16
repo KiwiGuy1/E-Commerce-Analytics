@@ -3,7 +3,7 @@ import app from "./app";
 import { startSimulator } from "./lib/simulator";
 
 dotenv.config();
-dotenv.config({ path: ".env.local", override: true });
+dotenv.config({ path: ".env.local" });
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {

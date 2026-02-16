@@ -70,7 +70,7 @@ POSTGRES_USER=postgres
 POSTGRES_PASSWORD=postgres
 POSTGRES_DB=ecommerce_analytics
 
-DATABASE_URL=postgresql://postgres:postgres@localhost:5432/ecommerce_analytics
+DATABASE_URL=postgresql://postgres:postgres@localhost:5433/ecommerce_analytics
 ```
 
 `frontend/.env.local`:
@@ -85,6 +85,7 @@ Root `.env` (used by Docker Compose variable interpolation):
 POSTGRES_USER=postgres
 POSTGRES_PASSWORD=postgres
 POSTGRES_DB=ecommerce_analytics
+POSTGRES_PORT=5433
 ```
 
 ## Docker quick start (recommended)
@@ -94,6 +95,8 @@ Run the full stack (frontend + backend + database):
 ```bash
 npm run docker:up
 ```
+
+On startup, the backend container automatically runs Prisma migrations and seed data.
 
 Open:
 
