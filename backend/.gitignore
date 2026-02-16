@@ -1,0 +1,25 @@
+# Dependencies / build artifacts
+node_modules
+/.next          # if using Next.js
+/dist           # if you have a build step
+/build
+
+# Environment variables (secrets!)
+.env
+.env.local
+.env.development
+.env.test
+.env.production
+*.env.backup
+
+# Prisma generated client (adjust path to match your output = "..." setting)
+# Common patterns:
+src/generated/prisma
+/generated/prisma
+prisma/generated
+lib/generated/prisma
+# Or if you put it elsewhere: path/to/your/output/*
+
+# Optional extras
+.DS_Store       # macOS junk
+Thumbs.db       # Windows junk

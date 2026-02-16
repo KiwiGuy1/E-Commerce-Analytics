@@ -4,7 +4,13 @@
   "main": "index.js",
   "scripts": {
     "test": "jest",
-    "dev": "nodemon src/server.ts"
+    "test:integration": "node -e \"process.env.RUN_INTEGRATION_TESTS='true'; require('child_process').execSync('jest src/controllers/analyticsController.integration.test.ts --runInBand', { stdio: 'inherit' });\"",
+    "dev": "nodemon --watch src --ext ts --exec ts-node src/server.ts",
+    "typecheck": "tsc --noEmit",
+    "prisma:generate": "prisma generate",
+    "prisma:migrate": "prisma migrate dev",
+    "prisma:seed": "ts-node prisma/seed.ts",
+    "prisma:studio": "prisma studio"
   },
   "keywords": [],
   "author": "",
@@ -12,21 +18,28 @@
   "type": "commonjs",
   "description": "",
   "dependencies": {
+    "@prisma/adapter-pg": "^7.3.0",
+    "@prisma/client": "^7.3.0",
     "cors": "^2.8.5",
     "dotenv": "^17.2.1",
     "express": "^5.1.0",
-    "mongoose": "^8.18.0"
+    "pg": "^8.18.0"
   },
   "devDependencies": {
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.3",
     "@types/jest": "^30.0.0",
     "@types/node": "^24.3.0",
+    "@types/pg": "^8.15.6",
     "@types/supertest": "^6.0.3",
     "nodemon": "^3.1.10",
+    "prisma": "^7.3.0",
     "supertest": "^7.1.4",
     "ts-jest": "^29.4.1",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.2"
+  },
+  "prisma": {
+    "seed": "ts-node prisma/seed.ts"
   }
 }

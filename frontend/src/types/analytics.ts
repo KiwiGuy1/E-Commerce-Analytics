@@ -38,3 +38,11 @@ export interface AnalyticsData {
   products: Product[];
   sales: Sale[];
 }
+
+export interface CreateSaleInput {
+  userId: string;
+  productId: string;
+  quantity: number;
+  customerSegment?: string;
+  paymentMethod?: string;
+}

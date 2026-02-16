@@ -1,31 +1,22 @@
 "use client";
-import React, { useEffect, useState, useRef } from "react";
-import axios from "axios";
-import RevenueChart from "../components/RevenueChart";
-import KPI from "../components/KPI";
-import { AnalyticsData, Sale } from "../types/analytics";
+
+import React, { useRef } from "react";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
+import KPI from "../components/KPI";
+import RevenueChart from "../components/RevenueChart";
+import type { Sale } from "../types/analytics";
+import { useAnalytics } from "@/hooks/useAnalytics";
 
 gsap.registerPlugin(useGSAP);
 
-const apiUrl = process.env.NEXT_PUBLIC_API_URL;
-
 const DashboardHome: React.FC = () => {
-  const [data, setData] = useState<AnalyticsData | null>(null);
-  const [error, setError] = useState<string | null>(null);
+  const { data, error, isLoading, isRefreshing, lastUpdated } = useAnalytics({
+    live: true,
+    pollIntervalMs: 5000,
+  });
   const scope = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    axios
-      .get<AnalyticsData>(`${apiUrl}/analytics`)
-      .then((res) => setData(res.data))
-      .catch(() =>
-        setError("Unable to connect to the database. Please try again later.")
-      );
-  }, []);
-
-  // Revenue by day (labels "DD MMM"), sorted chronologically
   const revenueByDay: { [label: string]: number } = {};
   data?.sales.forEach((sale) => {
     const label = new Date(sale.date).toLocaleDateString("en-US", {
@@ -35,6 +26,7 @@ const DashboardHome: React.FC = () => {
     revenueByDay[label] =
       (revenueByDay[label] || 0) + sale.price * sale.quantity;
   });
+
   const sortedLabels = Object.keys(revenueByDay).sort((a, b) => {
     const [dayA, monthA] = a.split(" ");
     const [dayB, monthB] = b.split(" ");
@@ -44,7 +36,6 @@ const DashboardHome: React.FC = () => {
   });
   const sortedRevenue = sortedLabels.map((label) => revenueByDay[label]);
 
-  // Top products + recent sales
   const productSalesCount: { [key: string]: number } = {};
   data?.sales.forEach((sale) => {
     const name = sale.productId?.name || "N/A";
@@ -55,10 +46,8 @@ const DashboardHome: React.FC = () => {
     .slice(0, 5);
   const recentSales = data?.sales.slice(-8).reverse() || [];
 
-  // GSAP animations
   useGSAP(
     () => {
-      // Background shimmer
       gsap.to(".bg-blob", {
         y: 20,
         x: 10,
@@ -69,7 +58,6 @@ const DashboardHome: React.FC = () => {
         stagger: 0.25,
       });
 
-      // Entrance sequence
       const tl = gsap.timeline({ defaults: { ease: "power2.out" } });
       tl.from(".sidebar", { x: -24, opacity: 0, duration: 0.5 })
         .from(".topbar", { y: -16, opacity: 0, duration: 0.5 }, "-=0.25")
@@ -95,9 +83,7 @@ const DashboardHome: React.FC = () => {
 
   return (
     <div ref={scope}>
-      {/* Main content */}
       <div className="flex-1">
-        {/* Topbar */}
         <div className="topbar mb-4 flex items-center gap-3">
           <div className="flex-1 rounded-xl border border-slate-200 bg-white/70 backdrop-blur px-3 py-2 shadow-sm">
             <input
@@ -110,17 +96,15 @@ const DashboardHome: React.FC = () => {
           </button>
         </div>
 
-        {/* Header */}
         <div className="hero mb-4">
           <h1 className="text-2xl md:text-3xl font-bold text-slate-900 tracking-tight">
             Welcome back
           </h1>
           <p className="mt-1 text-sm text-slate-500">
-            Real‑time insights into sales, revenue, and product performance.
+            Real-time insights into sales, revenue, and product performance.
           </p>
         </div>
 
-        {/* KPIs */}
         <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
           <div className="kpi-card rounded-2xl border border-slate-200 bg-white/80 backdrop-blur p-5 shadow-sm hover:shadow-md transition-shadow">
             <KPI
@@ -154,9 +138,7 @@ const DashboardHome: React.FC = () => {
           </div>
         </section>
 
-        {/* Main grid */}
         <section className="mt-6 grid grid-cols-1 gap-6 xl:grid-cols-3">
-          {/* Chart */}
           <div className="card xl:col-span-2 rounded-2xl border border-slate-200 bg-white/80 backdrop-blur p-6 shadow-sm hover:shadow-md transition-shadow">
             <div className="flex items-center justify-between">
               <h2 className="text-lg font-semibold text-slate-900">
@@ -164,7 +146,12 @@ const DashboardHome: React.FC = () => {
               </h2>
               <div className="flex items-center gap-2 text-xs text-slate-500">
                 <span className="inline-block h-2 w-2 rounded-full bg-emerald-500" />
-                Synced
+                {isRefreshing ? "Syncing..." : "Synced"}
+                <span>
+                  {lastUpdated
+                    ? `at ${lastUpdated.toLocaleTimeString("en-US")}`
+                    : ""}
+                </span>
               </div>
             </div>
             <div className="mt-4 h-80">
@@ -175,7 +162,6 @@ const DashboardHome: React.FC = () => {
             </div>
           </div>
 
-          {/* Top products */}
           <div className="card rounded-2xl border border-slate-200 bg-white/80 backdrop-blur p-6 shadow-sm hover:shadow-md transition-shadow">
             <div className="flex items-center justify-between">
               <h2 className="text-lg font-semibold text-slate-900">
@@ -209,7 +195,6 @@ const DashboardHome: React.FC = () => {
           </div>
         </section>
 
-        {/* Recent sales */}
         <section className="mt-6">
           <div className="card rounded-2xl border border-slate-200 bg-white/80 backdrop-blur p-6 shadow-sm hover:shadow-md transition-shadow">
             <div className="flex items-center justify-between">
@@ -270,15 +255,13 @@ const DashboardHome: React.FC = () => {
           </div>
         </section>
 
-        {/* Error banner */}
         {error && (
           <div className="mt-6 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-red-700 shadow-sm">
             {error}
           </div>
         )}
 
-        {/* Loading skeleton */}
-        {!data && !error && (
+        {isLoading && !error && (
           <section className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
             <div className="h-32 rounded-2xl bg-slate-100 animate-pulse" />
             <div className="h-32 rounded-2xl bg-slate-100 animate-pulse" />

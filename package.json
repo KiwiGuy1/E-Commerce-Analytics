@@ -1,0 +1,24 @@
+{
+  "name": "e-commerce-analytics-workspace",
+  "private": true,
+  "scripts": {
+    "db:up": "docker compose up -d db",
+    "db:down": "docker compose stop db",
+    "docker:up": "docker compose up -d db backend frontend",
+    "docker:rebuild": "docker compose up -d --build db backend frontend",
+    "docker:down": "docker compose down",
+    "docker:logs": "docker compose logs -f --tail=150",
+    "docker:test": "docker compose up -d db && docker compose run --rm test",
+    "dev": "concurrently -n backend,frontend \"npm --prefix backend run dev\" \"npm --prefix frontend run dev\"",
+    "dev:backend": "npm --prefix backend run dev",
+    "dev:frontend": "npm --prefix frontend run dev",
+    "prisma:migrate": "npm --prefix backend run prisma:migrate",
+    "prisma:seed": "npm --prefix backend run prisma:seed",
+    "test": "npm --prefix backend run test",
+    "test:integration": "npm --prefix backend run test:integration",
+    "lint": "npm --prefix frontend run lint"
+  },
+  "devDependencies": {
+    "concurrently": "^9.0.1"
+  }
+}
