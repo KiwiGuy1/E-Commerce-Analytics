@@ -16,6 +16,10 @@ const DashboardHome: React.FC = () => {
     pollIntervalMs: 5000,
   });
   const scope = useRef<HTMLDivElement>(null);
+  const currencyFormatter = new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
+  });
 
   const revenueByDay: { [label: string]: number } = {};
   data?.sales.forEach((sale) => {
@@ -65,20 +69,20 @@ const DashboardHome: React.FC = () => {
         .from(
           ".kpi-card",
           { y: 26, opacity: 0, duration: 0.55, stagger: 0.08 },
-          "-=0.1"
+          "-=0.1",
         )
         .from(
           ".card",
           { y: 26, opacity: 0, duration: 0.6, stagger: 0.08 },
-          "-=0.15"
+          "-=0.15",
         )
         .from(
           ".row-anim",
           { opacity: 0, y: 10, stagger: 0.03, duration: 0.25 },
-          "-=0.2"
+          "-=0.2",
         );
     },
-    { scope }
+    { scope },
   );
 
   return (
@@ -116,7 +120,7 @@ const DashboardHome: React.FC = () => {
           <div className="kpi-card rounded-2xl border border-slate-200 bg-white/80 backdrop-blur p-5 shadow-sm hover:shadow-md transition-shadow">
             <KPI
               label="Total Revenue"
-              value={`$${data?.totalRevenue ?? 0}`}
+              value={currencyFormatter.format(data?.totalRevenue ?? 0)}
               color="text-emerald-600"
             />
           </div>
