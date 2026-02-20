@@ -23,13 +23,13 @@ export default function OrdersPage() {
 
   const segmentOptions = useMemo(() => {
     return Array.from(
-      new Set(sales.map((sale) => sale.customerSegment).filter(Boolean))
+      new Set(sales.map((sale) => sale.customerSegment).filter(Boolean)),
     ) as string[];
   }, [sales]);
 
   const paymentOptions = useMemo(() => {
     return Array.from(
-      new Set(sales.map((sale) => sale.paymentMethod).filter(Boolean))
+      new Set(sales.map((sale) => sale.paymentMethod).filter(Boolean)),
     ) as string[];
   }, [sales]);
 
@@ -50,25 +50,25 @@ export default function OrdersPage() {
         return matchesQuery && matchesSegment && matchesPayment;
       })
       .slice()
-      .sort(
-        (a, b) =>
-          new Date(b.date).getTime() - new Date(a.date).getTime()
-      );
+      .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
   }, [paymentFilter, sales, search, segmentFilter]);
 
   const summary = useMemo(() => {
     const orderCount = filteredSales.length;
-    const unitsSold = filteredSales.reduce((sum, sale) => sum + sale.quantity, 0);
+    const unitsSold = filteredSales.reduce(
+      (sum, sale) => sum + sale.quantity,
+      0,
+    );
     const revenue = filteredSales.reduce(
       (sum, sale) => sum + sale.quantity * sale.price,
-      0
+      0,
     );
     return { orderCount, unitsSold, revenue };
   }, [filteredSales]);
 
   return (
     <div className="space-y-6">
-      <div className="rounded-2xl border border-slate-200 bg-white/80 p-6 shadow-sm">
+      <div className="surface rounded-2xl p-6">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
             <h1 className="text-2xl font-semibold text-slate-900">Orders</h1>
@@ -78,7 +78,7 @@ export default function OrdersPage() {
           </div>
           <button
             onClick={() => void refetch({ silent: true })}
-            className="rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm text-slate-700 hover:bg-slate-100"
+            className="btn-secondary text-sm"
           >
             {isRefreshing ? "Refreshing..." : "Refresh"}
           </button>
@@ -86,19 +86,19 @@ export default function OrdersPage() {
       </div>
 
       <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-        <div className="rounded-2xl border border-slate-200 bg-white/80 p-5 shadow-sm">
+        <div className="surface rounded-2xl p-5">
           <p className="text-sm text-slate-500">Orders</p>
           <p className="mt-2 text-2xl font-semibold text-slate-900">
             {summary.orderCount}
           </p>
         </div>
-        <div className="rounded-2xl border border-slate-200 bg-white/80 p-5 shadow-sm">
+        <div className="surface rounded-2xl p-5">
           <p className="text-sm text-slate-500">Units Sold</p>
           <p className="mt-2 text-2xl font-semibold text-slate-900">
             {summary.unitsSold}
           </p>
         </div>
-        <div className="rounded-2xl border border-slate-200 bg-white/80 p-5 shadow-sm">
+        <div className="surface rounded-2xl p-5">
           <p className="text-sm text-slate-500">Revenue</p>
           <p className="mt-2 text-2xl font-semibold text-emerald-700">
             {money.format(summary.revenue)}
@@ -106,18 +106,18 @@ export default function OrdersPage() {
         </div>
       </div>
 
-      <div className="rounded-2xl border border-slate-200 bg-white/80 p-6 shadow-sm">
+      <div className="surface rounded-2xl p-6">
         <div className="grid grid-cols-1 gap-3 md:grid-cols-4">
           <input
             value={search}
             onChange={(event) => setSearch(event.target.value)}
             placeholder="Search product or customer id"
-            className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 placeholder:text-slate-400"
+            className="field text-sm"
           />
           <select
             value={segmentFilter}
             onChange={(event) => setSegmentFilter(event.target.value)}
-            className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900"
+            className="field text-sm"
           >
             <option value="all">All segments</option>
             {segmentOptions.map((segment) => (
@@ -129,7 +129,7 @@ export default function OrdersPage() {
           <select
             value={paymentFilter}
             onChange={(event) => setPaymentFilter(event.target.value)}
-            className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900"
+            className="field text-sm"
           >
             <option value="all">All payments</option>
             {paymentOptions.map((payment) => (
@@ -144,15 +144,15 @@ export default function OrdersPage() {
               setSegmentFilter("all");
               setPaymentFilter("all");
             }}
-            className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-700 hover:bg-slate-100"
+            className="btn-secondary text-sm"
           >
             Clear filters
           </button>
         </div>
       </div>
 
-      <div className="overflow-x-auto rounded-2xl border border-slate-200 bg-white/80 p-4 shadow-sm">
-        <table className="min-w-full table-auto">
+      <div className="surface overflow-x-auto rounded-2xl p-4">
+        <table className="data-table min-w-full table-auto">
           <thead>
             <tr className="text-left text-sm text-slate-600">
               <th className="px-3 py-2">Date</th>
@@ -166,7 +166,7 @@ export default function OrdersPage() {
           </thead>
           <tbody>
             {filteredSales.map((sale) => (
-              <tr key={sale._id} className="border-t border-slate-100 text-sm">
+              <tr key={sale._id} className="text-sm">
                 <td className="px-3 py-2 text-slate-700">
                   {new Date(sale.date).toLocaleString("en-US")}
                 </td>
@@ -190,7 +190,10 @@ export default function OrdersPage() {
             ))}
             {!isLoading && filteredSales.length === 0 && (
               <tr>
-                <td colSpan={7} className="px-3 py-8 text-center text-sm text-slate-500">
+                <td
+                  colSpan={7}
+                  className="px-3 py-8 text-center text-sm text-slate-500"
+                >
                   No orders match your filters.
                 </td>
               </tr>

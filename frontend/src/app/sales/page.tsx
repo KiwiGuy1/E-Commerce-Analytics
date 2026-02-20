@@ -115,20 +115,25 @@ const SalesPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen w-full px-4 py-8 md:px-6 flex flex-col items-center justify-start bg-slate-50">
-      <h1 className="text-3xl font-bold mb-8 text-center text-slate-900">
-        Sales and Orders
-      </h1>
+    <div className="space-y-6">
+      <div className="surface rounded-2xl p-6">
+        <h1 className="text-2xl font-semibold text-slate-900">
+          Sales and Orders
+        </h1>
+        <p className="mt-1 text-sm text-slate-600">
+          Create manual sales and monitor live order flow in one place.
+        </p>
+      </div>
 
       {/* Top-level loading/API errors from analytics or users endpoints. */}
       {(analyticsError || usersError) && (
-        <div className="w-full max-w-6xl mb-6 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-red-700">
+        <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-red-700">
           {analyticsError || usersError}
         </div>
       )}
 
       {/* Manual order entry form that posts to POST /api/sales. */}
-      <div className="sales-card w-full max-w-6xl rounded-xl border border-slate-200 bg-white p-6 mb-6 shadow-sm">
+      <div className="surface sales-card rounded-xl p-6">
         <h2 className="text-xl font-semibold mb-6 text-slate-900">
           Enter Sale / Order
         </h2>
@@ -142,7 +147,7 @@ const SalesPage: React.FC = () => {
             <select
               value={userId}
               onChange={(event) => setUserId(event.target.value)}
-              className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-slate-900"
+              className="field"
               required
             >
               {users.map((user) => (
@@ -158,7 +163,7 @@ const SalesPage: React.FC = () => {
             <select
               value={productId}
               onChange={(event) => setProductId(event.target.value)}
-              className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-slate-900"
+              className="field"
               required
             >
               {products.map((product) => (
@@ -177,7 +182,7 @@ const SalesPage: React.FC = () => {
               max={selectedProduct?.stock || 9999}
               value={quantity}
               onChange={(event) => setQuantity(Number(event.target.value))}
-              className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-slate-900"
+              className="field"
               required
             />
           </label>
@@ -189,7 +194,7 @@ const SalesPage: React.FC = () => {
               value={paymentMethod}
               onChange={(event) => setPaymentMethod(event.target.value)}
               placeholder="card, paypal, bank_transfer"
-              className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-slate-900 placeholder:text-slate-400"
+              className="field"
             />
           </label>
 
@@ -200,7 +205,7 @@ const SalesPage: React.FC = () => {
               value={customerSegment}
               onChange={(event) => setCustomerSegment(event.target.value)}
               placeholder="retail, wholesale, vip"
-              className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-slate-900 placeholder:text-slate-400"
+              className="field"
             />
           </label>
 
@@ -208,7 +213,7 @@ const SalesPage: React.FC = () => {
             <button
               type="submit"
               disabled={isSubmitting || !users.length || !products.length}
-              className="rounded-lg bg-slate-900 px-4 py-2 text-white font-medium disabled:opacity-50"
+              className="btn-primary disabled:opacity-50"
             >
               {isSubmitting ? "Saving..." : "Create Sale"}
             </button>
@@ -230,7 +235,7 @@ const SalesPage: React.FC = () => {
       </div>
 
       {/* Revenue history visualization built from grouped sales data. */}
-      <div className="sales-card w-full max-w-6xl rounded-xl border border-slate-200 bg-white p-6 mb-6 shadow-sm">
+      <div className="surface sales-card rounded-xl p-6">
         <h2 className="text-xl font-semibold mb-6 text-slate-900">
           Revenue Trend by Date
         </h2>
@@ -243,12 +248,12 @@ const SalesPage: React.FC = () => {
       </div>
 
       {/* Most recent sales table for quick operational review. */}
-      <div className="sales-card w-full max-w-6xl rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+      <div className="surface sales-card rounded-xl p-6">
         <h2 className="text-xl font-semibold mb-6 text-slate-900">
           Recent Sales
         </h2>
         <div className="overflow-x-auto">
-          <table className="min-w-full table-auto">
+          <table className="data-table min-w-full table-auto">
             <thead>
               <tr>
                 <th className="px-4 py-2 text-left text-slate-600 font-semibold">
@@ -279,10 +284,7 @@ const SalesPage: React.FC = () => {
                 .slice(-20)
                 .reverse()
                 .map((sale, idx) => (
-                  <tr
-                    key={idx}
-                    className="border-t border-slate-200 hover:bg-slate-50 transition-colors"
-                  >
+                  <tr key={idx}>
                     <td className="px-4 py-2 text-slate-800">
                       {sale.productId?.name || "N/A"}
                     </td>
@@ -311,8 +313,11 @@ const SalesPage: React.FC = () => {
         </div>
       </div>
 
-      <div className="mt-8 text-center">
-        <Link href="/" className="text-slate-700 hover:underline text-base">
+      <div className="text-center">
+        <Link
+          href="/"
+          className="text-sm font-medium text-slate-700 hover:underline"
+        >
           {"<"} Back to Dashboard
         </Link>
       </div>

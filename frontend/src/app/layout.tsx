@@ -24,14 +24,14 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-50`}
+        className={`${geistSans.variable} ${geistMono.variable} app-shell antialiased`}
       >
-        <div className="mx-auto max-w-7xl px-4 md:px-6 py-6">
-          <div className="flex flex-col md:flex-row gap-6">
+        <div className="mx-auto max-w-[1400px] px-4 py-5 md:px-6 md:py-7">
+          <div className="flex flex-col gap-5 md:flex-row md:items-start">
             {/* Persistent left nav */}
             <SideNav />
             {/* Main content */}
-            <div className="flex-1">
+            <div className="min-w-0 flex-1">
               <ContentTransition>{children}</ContentTransition>
             </div>
           </div>

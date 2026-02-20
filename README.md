@@ -1,44 +1,31 @@
 # E-Commerce Analytics Dashboard
 
-Full-stack analytics platform for monitoring e-commerce performance in near real time. The project combines a Next.js frontend, an Express + Prisma backend, and PostgreSQL for persistent data.
+A full-stack analytics platform for e-commerce data, built with a Next.js frontend, Express + Prisma backend, and PostgreSQL.
 
-## Why this project
+## What this project includes
 
-- Demonstrates end-to-end product thinking across data, API, and UX layers
-- Uses typed API contracts and reusable hooks for maintainable frontend data access
-- Includes seeded datasets and a simulator for realistic analytics behavior during demos
-- Organized as a workspace with isolated frontend/backend concerns and shared run scripts
+- Live dashboard KPIs (sales, revenue, top product, stock)
+- Analytics, products, orders, customers, sales-entry, and settings pages
+- Prisma-backed API with seeded demo data
+- Docker workflow for one-command startup
 
 ## Tech stack
 
-- Frontend: Next.js 15, React 19, TypeScript, Tailwind CSS, Axios, Chart.js
-- Backend: Node.js, Express, TypeScript, Prisma ORM
+- Frontend: Next.js 15, React 19, TypeScript, Tailwind CSS, Chart.js
+- Backend: Node.js, Express, TypeScript, Prisma
 - Database: PostgreSQL 16 (Docker)
-- Tooling: ESLint, Jest, ts-node, nodemon, concurrently
-
-## Architecture overview
-
-- `frontend/` hosts the analytics UI (dashboard, analytics, products, orders, customers, settings)
-- `backend/` exposes REST endpoints under `/api/*`
-- Prisma models: `User`, `Product`, `Sale`
-- Frontend data access is centralized in `frontend/src/lib/api.ts` and consumed by custom hooks (`useAnalytics`, `useUsers`)
+- Tooling: ESLint, Jest, Nodemon, ts-node, concurrently
 
 ## Repository structure
 
 ```text
 .
 ├─ backend/
-│  ├─ src/
-│  │  ├─ controllers/
-│  │  ├─ routes/
-│  │  └─ lib/
-│  └─ prisma/
+│  ├─ prisma/
+│  └─ src/
 ├─ frontend/
 │  └─ src/
-│     ├─ app/
-│     ├─ components/
-│     ├─ hooks/
-│     └─ lib/
+├─ docker-compose.yml
 └─ package.json
 ```
 
@@ -48,158 +35,157 @@ Full-stack analytics platform for monitoring e-commerce performance in near real
 - npm 10+
 - Docker Desktop
 
-## Environment variables
+## Environment setup
 
-Copy examples instead of creating files manually:
+From the repository root, copy the example files:
+
+### Windows (PowerShell)
+
+```powershell
+Copy-Item .env.example .env
+Copy-Item backend/.env.example backend/.env
+Copy-Item frontend/.env.example frontend/.env.local
+```
+
+### macOS/Linux
 
 ```bash
-copy .env.example .env
-copy backend\\.env.example backend\\.env
-copy frontend\\.env.example frontend\\.env.local
+cp .env.example .env
+cp backend/.env.example backend/.env
+cp frontend/.env.example frontend/.env.local
 ```
 
-If you prefer manual setup, use these values.
+Default important values:
 
-`backend/.env`:
+- Root `.env`: Compose interpolation vars (`POSTGRES_*`, `POSTGRES_PORT=5433`)
+- `backend/.env`: local backend DB URL uses `localhost:5433`
+- `frontend/.env.local`: `NEXT_PUBLIC_API_URL=http://localhost:5000/api`
 
-```env
-PORT=5000
-CORS_ORIGIN=http://localhost:3000
+## Docker (recommended)
 
-POSTGRES_USER=postgres
-POSTGRES_PASSWORD=postgres
-POSTGRES_DB=ecommerce_analytics
-
-DATABASE_URL=postgresql://postgres:postgres@localhost:5433/ecommerce_analytics
-```
-
-`frontend/.env.local`:
-
-```env
-NEXT_PUBLIC_API_URL=http://localhost:5000/api
-```
-
-Root `.env` (used by Docker Compose variable interpolation):
-
-```env
-POSTGRES_USER=postgres
-POSTGRES_PASSWORD=postgres
-POSTGRES_DB=ecommerce_analytics
-POSTGRES_PORT=5433
-```
-
-## Docker quick start (recommended)
-
-Run the full stack (frontend + backend + database):
+Start full stack:
 
 ```bash
 npm run docker:up
 ```
 
-On startup, the backend container automatically runs Prisma migrations and seed data.
-
-Open:
-
-- Frontend: http://localhost:3000
-- Backend API: http://localhost:5000/api
-
-Run backend tests in an isolated container (with DB included):
+Rebuild containers after code/config changes:
 
 ```bash
-npm run docker:test
+npm run docker:rebuild
 ```
 
-Stop containers:
+Follow logs:
+
+```bash
+npm run docker:logs
+```
+
+Stop everything:
 
 ```bash
 npm run docker:down
 ```
 
-## Interviewer quick start
+### Docker URLs
 
-For a reviewer/interviewer, these are the only commands needed:
+- Frontend: http://localhost:3000
+- Backend API: http://localhost:5000/api
+- Postgres exposed on host: `localhost:5433`
 
-```bash
-npm install
-npm run docker:up
-npm run docker:test
-```
+### Docker DB behavior (important)
 
-Then open `http://localhost:3000`.
+Inside Docker, backend connects to Postgres using service DNS `db:5432` from `docker-compose.yml`.
+Local `.env` and `.env.local` are loaded as fallbacks only, so container-provided `DATABASE_URL` is preserved.
 
-## Getting started
+## Local development (without app containers)
 
-1. Install dependencies:
-
-```bash
-npm install
-npm --prefix backend install
-npm --prefix frontend install
-```
-
-2. Start PostgreSQL:
+Start DB only in Docker:
 
 ```bash
 npm run db:up
 ```
 
-3. Run migrations and seed data:
-
-```bash
-npm run prisma:migrate
-npm run prisma:seed
-```
-
-4. Start backend + frontend together:
+Start backend + frontend locally:
 
 ```bash
 npm run dev
 ```
 
-5. Open the app:
+Or run each side separately:
 
-- Frontend: http://localhost:3000
-- Backend API: http://localhost:5000/api
+```bash
+npm run dev:backend
+npm run dev:frontend
+```
 
-## Available scripts (workspace root)
+## Database and Prisma
 
-- `npm run dev` — run backend and frontend concurrently
-- `npm run dev:backend` — run backend only
-- `npm run dev:frontend` — run frontend only
-- `npm run db:up` / `npm run db:down` — start/stop only PostgreSQL container
-- `npm run docker:up` — start frontend, backend, and database via Docker
-- `npm run docker:rebuild` — rebuild and restart Docker services
-- `npm run docker:test` — run backend unit + integration tests in Docker
-- `npm run docker:logs` — follow Docker service logs
-- `npm run docker:down` — stop and remove Docker services
-- `npm run prisma:migrate` — create/apply Prisma migration
-- `npm run prisma:seed` — seed users, products, and sales
+Run migrations locally:
+
+```bash
+npm run prisma:migrate
+```
+
+Seed local data:
+
+```bash
+npm run prisma:seed
+```
+
+Notes:
+
+- Local backend uses `backend/.env` (`localhost:5433`)
+- Docker backend uses compose env (`db:5432`)
+
+## Root scripts
+
+- `npm run dev` — run backend + frontend concurrently
+- `npm run dev:backend` — backend only
+- `npm run dev:frontend` — frontend only
+- `npm run db:up` / `npm run db:down` — start/stop DB container only
+- `npm run docker:up` — start db + backend + frontend in Docker
+- `npm run docker:rebuild` — rebuild and start Docker services
+- `npm run docker:logs` — stream container logs
+- `npm run docker:down` — stop/remove services
+- `npm run docker:test` — run backend tests in Docker profile
+- `npm run prisma:migrate` — Prisma migrate (backend)
+- `npm run prisma:seed` — Prisma seed (backend)
 - `npm run test` — backend tests
-- `npm run test:integration` — backend integration test suite
-- `npm run lint` — frontend linting
+- `npm run test:integration` — backend integration tests
+- `npm run lint` — frontend lint
 
 ## API summary
 
-- `GET /api/analytics` — aggregate KPI and analytics payload
-- `GET /api/users` — user/customer list
-- `POST /api/sales` — create a sale/order record
+- `GET /api/analytics` — aggregated analytics payload
+- `GET /api/users` — customer/user list
+- `POST /api/sales` — create sale/order
 
-## Security note
+## Troubleshooting
 
-- This repository uses local development placeholder credentials only.
-- No production tokens, private keys, or cloud credentials are required.
-- Keep `.env` files local (already gitignored) and share only `*.env.example`.
+### `npm run dev` shows Prisma `P1001`
 
-## Highlights for portfolio/resume
+- Ensure DB is running: `npm run db:up`
+- Confirm backend URL in `backend/.env` uses `localhost:5433`
+- Confirm port is free and Docker DB is healthy: `docker compose ps`
 
-- Built a full-stack analytics dashboard with live refresh and typed API integration
-- Implemented custom React hooks for asynchronous polling, loading states, and error handling
-- Modeled relational commerce data with Prisma and PostgreSQL
-- Added deterministic seed workflows for reliable local demos and testing
+### Docker is up but backend can’t reach DB
 
-## Future enhancements
+- Rebuild once: `npm run docker:rebuild`
+- Check backend logs: `docker compose logs backend --tail=200`
+- You should see Prisma datasource at `db:5432`
 
-- Authentication and role-based access controls
-- Pagination/filtering for large datasets
-- Caching and query optimization for high-volume analytics
-- CI pipeline for linting, tests, and deployment
+### Frontend starts on a different port
+
+If port `3000` is busy, Next.js auto-falls back (for example `3001`).
+
+## Demo flow
+
+1. `npm run docker:up`
+2. Open http://localhost:3000
+3. Visit Sales page and create an order
+4. Return to dashboard and watch metrics update
+
+## License / usage
+
+This repository is intended as a portfolio/demo project. Adjust secrets and hardening before production use.

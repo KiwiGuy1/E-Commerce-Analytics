@@ -21,17 +21,19 @@ const KPI: React.FC<KPIProps> = ({
     align === "center"
       ? "items-center"
       : align === "end"
-      ? "items-end"
-      : "items-start";
+        ? "items-end"
+        : "items-start";
 
   return (
     <div className={`flex flex-col ${alignClass} ${className}`}>
-      <span className="text-xs font-medium uppercase tracking-wide text-slate-500">
+      <span className="text-[11px] font-semibold uppercase tracking-[0.12em] text-slate-500">
         {label}
       </span>
-      <span className={`mt-1 text-3xl font-semibold ${color}`}>{value}</span>
+      <span className={`mt-2 text-3xl font-bold leading-none ${color}`}>
+        {value}
+      </span>
       {sublabel && (
-        <span className="mt-1 text-xs text-slate-400">{sublabel}</span>
+        <span className="mt-2 text-xs text-slate-500">{sublabel}</span>
       )}
     </div>
   );

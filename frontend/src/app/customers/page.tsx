@@ -16,91 +16,86 @@ const CustomersPage: React.FC = () => {
 
   const newIds = useMemo(
     () => new Set(newCustomers.map((customer) => customer._id)),
-    [newCustomers]
+    [newCustomers],
   );
 
   return (
-    <div className="p-8 min-h-screen bg-gray-50">
-      <div className="mx-auto max-w-5xl">
-        <div className="mb-6 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-          <h1 className="text-3xl font-bold text-blue-900">Customers</h1>
+    <div className="space-y-6">
+      <div className="surface rounded-2xl p-6">
+        <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+          <h1 className="text-2xl font-semibold text-slate-900">Customers</h1>
           <button
             onClick={() => void refetch({ silent: true })}
-            className="rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 shadow-sm hover:bg-slate-100"
+            className="btn-secondary text-sm font-medium"
           >
             Refresh now
           </button>
         </div>
+      </div>
 
-        <div className="mb-6 rounded-xl border border-slate-200 bg-white px-4 py-3 shadow-sm">
-          <div className="flex flex-wrap items-center gap-3 text-sm text-slate-600">
-            <span className="inline-flex items-center gap-2 rounded-full bg-emerald-50 px-3 py-1 text-emerald-700">
-              <span className="h-2 w-2 rounded-full bg-emerald-500" />
-              Live updates
-            </span>
-            <span>
-              Polling every 4s {isRefreshing ? "(refreshing...)" : ""}
-            </span>
-            <span>
-              Last updated:{" "}
-              {lastUpdated
-                ? lastUpdated.toLocaleTimeString("en-US")
-                : "waiting for first sync"}
-            </span>
-          </div>
+      <div className="surface rounded-xl px-4 py-3">
+        <div className="flex flex-wrap items-center gap-3 text-sm text-slate-600">
+          <span className="inline-flex items-center gap-2 rounded-full bg-emerald-50 px-3 py-1 text-emerald-700">
+            <span className="h-2 w-2 rounded-full bg-emerald-500" />
+            Live updates
+          </span>
+          <span>Polling every 4s {isRefreshing ? "(refreshing...)" : ""}</span>
+          <span>
+            Last updated:{" "}
+            {lastUpdated
+              ? lastUpdated.toLocaleTimeString("en-US")
+              : "waiting for first sync"}
+          </span>
         </div>
+      </div>
 
-        {newCustomers.length > 0 && (
-          <div className="mb-6 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-emerald-800 shadow-sm">
-            {newCustomers.length === 1
-              ? `New customer joined: ${newCustomers[0].name}`
-              : `${newCustomers.length} new customers joined just now.`}
-          </div>
-        )}
+      {newCustomers.length > 0 && (
+        <div className="mb-6 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-emerald-800 shadow-sm">
+          {newCustomers.length === 1
+            ? `New customer joined: ${newCustomers[0].name}`
+            : `${newCustomers.length} new customers joined just now.`}
+        </div>
+      )}
 
-        {error && (
-          <div className="mb-6 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-red-700">
-            {error}
-          </div>
-        )}
+      {error && (
+        <div className="mb-6 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-red-700">
+          {error}
+        </div>
+      )}
 
-        <div className="bg-white rounded-lg shadow p-8">
-          <table className="min-w-full table-auto">
-            <thead>
-              <tr>
-                <th className="px-4 py-2 text-left text-blue-900">Name</th>
-                <th className="px-4 py-2 text-left text-blue-900">Email</th>
-                <th className="px-4 py-2 text-left text-blue-900">Role</th>
-                <th className="px-4 py-2 text-left text-blue-900">Signup Date</th>
+      <div className="surface overflow-x-auto rounded-2xl p-4">
+        <table className="data-table min-w-full table-auto">
+          <thead>
+            <tr>
+              <th className="px-4 py-2 text-left">Name</th>
+              <th className="px-4 py-2 text-left">Email</th>
+              <th className="px-4 py-2 text-left">Role</th>
+              <th className="px-4 py-2 text-left">Signup Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            {users.map((user) => (
+              <tr
+                key={user._id}
+                className={newIds.has(user._id) ? "bg-emerald-50/70" : ""}
+              >
+                <td className="px-4 py-2 text-slate-800">{user.name}</td>
+                <td className="px-4 py-2 text-emerald-700">{user.email}</td>
+                <td className="px-4 py-2 text-violet-700">{user.role}</td>
+                <td className="px-4 py-2 text-slate-600">
+                  {new Date(user.createdAt).toLocaleDateString()}
+                </td>
               </tr>
-            </thead>
-            <tbody>
-              {users.map((user) => (
-                <tr
-                  key={user._id}
-                  className={
-                    "border-t transition-colors " +
-                    (newIds.has(user._id) ? "bg-emerald-50" : "hover:bg-gray-50")
-                  }
-                >
-                  <td className="px-4 py-2 text-blue-800">{user.name}</td>
-                  <td className="px-4 py-2 text-green-700">{user.email}</td>
-                  <td className="px-4 py-2 text-purple-700">{user.role}</td>
-                  <td className="px-4 py-2 text-orange-700">
-                    {new Date(user.createdAt).toLocaleDateString()}
-                  </td>
-                </tr>
-              ))}
-              {!isLoading && users.length === 0 && (
-                <tr>
-                  <td colSpan={4} className="px-4 py-6 text-center text-gray-500">
-                    No users found.
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-        </div>
+            ))}
+            {!isLoading && users.length === 0 && (
+              <tr>
+                <td colSpan={4} className="px-4 py-6 text-center text-gray-500">
+                  No users found.
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
       </div>
     </div>
   );

@@ -89,49 +89,47 @@ const DashboardHome: React.FC = () => {
     <div ref={scope}>
       <div className="flex-1">
         <div className="topbar mb-4 flex items-center gap-3">
-          <div className="flex-1 rounded-xl border border-slate-200 bg-white/70 backdrop-blur px-3 py-2 shadow-sm">
+          <div className="surface flex-1 rounded-xl px-3 py-2">
             <input
               placeholder="Search products, orders..."
               className="w-full bg-transparent text-sm text-slate-700 placeholder:text-slate-400 focus:outline-none"
             />
           </div>
-          <button className="rounded-xl border border-slate-200 bg-white/70 px-3 py-2 text-sm text-slate-700 shadow-sm hover:bg-slate-100/70">
-            Export
-          </button>
+          <button className="btn-secondary text-sm">Export</button>
         </div>
 
-        <div className="hero mb-4">
-          <h1 className="text-2xl md:text-3xl font-bold text-slate-900 tracking-tight">
+        <div className="hero mb-4 rounded-3xl border border-slate-200/60 bg-gradient-to-r from-sky-50/85 via-white/85 to-indigo-50/85 p-6 shadow-sm">
+          <h1 className="text-2xl font-bold tracking-tight text-slate-900 md:text-3xl">
             Welcome back
           </h1>
-          <p className="mt-1 text-sm text-slate-500">
+          <p className="mt-2 text-sm text-slate-600">
             Real-time insights into sales, revenue, and product performance.
           </p>
         </div>
 
         <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
-          <div className="kpi-card rounded-2xl border border-slate-200 bg-white/80 backdrop-blur p-5 shadow-sm hover:shadow-md transition-shadow">
+          <div className="kpi-card surface rounded-2xl p-5 transition-shadow hover:shadow-md">
             <KPI
               label="Total Sales"
               value={data?.totalSales ?? 0}
               color="text-blue-600"
             />
           </div>
-          <div className="kpi-card rounded-2xl border border-slate-200 bg-white/80 backdrop-blur p-5 shadow-sm hover:shadow-md transition-shadow">
+          <div className="kpi-card surface rounded-2xl p-5 transition-shadow hover:shadow-md">
             <KPI
               label="Total Revenue"
               value={currencyFormatter.format(data?.totalRevenue ?? 0)}
               color="text-emerald-600"
             />
           </div>
-          <div className="kpi-card rounded-2xl border border-slate-200 bg-white/80 backdrop-blur p-5 shadow-sm hover:shadow-md transition-shadow">
+          <div className="kpi-card surface rounded-2xl p-5 transition-shadow hover:shadow-md">
             <KPI
               label="Top Product"
               value={data?.topProduct ?? "N/A"}
               color="text-purple-600"
             />
           </div>
-          <div className="kpi-card rounded-2xl border border-slate-200 bg-white/80 backdrop-blur p-5 shadow-sm hover:shadow-md transition-shadow">
+          <div className="kpi-card surface rounded-2xl p-5 transition-shadow hover:shadow-md">
             <KPI
               label="Products in Stock"
               value={
@@ -143,7 +141,7 @@ const DashboardHome: React.FC = () => {
         </section>
 
         <section className="mt-6 grid grid-cols-1 gap-6 xl:grid-cols-3">
-          <div className="card xl:col-span-2 rounded-2xl border border-slate-200 bg-white/80 backdrop-blur p-6 shadow-sm hover:shadow-md transition-shadow">
+          <div className="card surface rounded-2xl p-6 transition-shadow hover:shadow-md xl:col-span-2">
             <div className="flex items-center justify-between">
               <h2 className="text-lg font-semibold text-slate-900">
                 Revenue (by Day)
@@ -166,7 +164,7 @@ const DashboardHome: React.FC = () => {
             </div>
           </div>
 
-          <div className="card rounded-2xl border border-slate-200 bg-white/80 backdrop-blur p-6 shadow-sm hover:shadow-md transition-shadow">
+          <div className="card surface rounded-2xl p-6 transition-shadow hover:shadow-md">
             <div className="flex items-center justify-between">
               <h2 className="text-lg font-semibold text-slate-900">
                 Top Products
@@ -200,7 +198,7 @@ const DashboardHome: React.FC = () => {
         </section>
 
         <section className="mt-6">
-          <div className="card rounded-2xl border border-slate-200 bg-white/80 backdrop-blur p-6 shadow-sm hover:shadow-md transition-shadow">
+          <div className="card surface rounded-2xl p-6 transition-shadow hover:shadow-md">
             <div className="flex items-center justify-between">
               <h2 className="text-lg font-semibold text-slate-900">
                 Recent Sales
@@ -210,9 +208,9 @@ const DashboardHome: React.FC = () => {
               </span>
             </div>
             <div className="mt-4 overflow-x-auto">
-              <table className="min-w-full">
+              <table className="data-table min-w-full">
                 <thead>
-                  <tr className="text-left text-slate-600 text-sm">
+                  <tr className="text-left text-sm text-slate-600">
                     <th className="px-4 py-2">Product</th>
                     <th className="px-4 py-2">Quantity</th>
                     <th className="px-4 py-2">Price</th>
@@ -232,7 +230,7 @@ const DashboardHome: React.FC = () => {
                         {sale.quantity}
                       </td>
                       <td className="px-4 py-2 text-purple-700">
-                        ${sale.price}
+                        {currencyFormatter.format(sale.price)}
                       </td>
                       <td className="px-4 py-2 text-slate-600">
                         {new Date(sale.date).toLocaleDateString("en-US", {

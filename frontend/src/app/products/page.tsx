@@ -21,7 +21,9 @@ export default function ProductsPage() {
   const products = useMemo(() => data?.products ?? [], [data?.products]);
 
   const categories = useMemo(() => {
-    return Array.from(new Set(products.map((product) => product.category))).sort();
+    return Array.from(
+      new Set(products.map((product) => product.category)),
+    ).sort();
   }, [products]);
 
   const filteredProducts = useMemo(() => {
@@ -38,18 +40,21 @@ export default function ProductsPage() {
 
   const inventorySummary = useMemo(() => {
     const totalSkus = products.length;
-    const totalUnits = products.reduce((sum, product) => sum + product.stock, 0);
+    const totalUnits = products.reduce(
+      (sum, product) => sum + product.stock,
+      0,
+    );
     const lowStock = products.filter((product) => product.stock <= 20).length;
     const estInventoryValue = products.reduce(
       (sum, product) => sum + product.stock * product.price,
-      0
+      0,
     );
     return { totalSkus, totalUnits, lowStock, estInventoryValue };
   }, [products]);
 
   return (
     <div className="space-y-6">
-      <div className="rounded-2xl border border-slate-200 bg-white/80 p-6 shadow-sm">
+      <div className="surface rounded-2xl p-6">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
             <h1 className="text-2xl font-semibold text-slate-900">Products</h1>
@@ -59,7 +64,7 @@ export default function ProductsPage() {
           </div>
           <button
             onClick={() => void refetch({ silent: true })}
-            className="rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm text-slate-700 hover:bg-slate-100"
+            className="btn-secondary text-sm"
           >
             {isRefreshing ? "Refreshing..." : "Refresh"}
           </button>
@@ -67,25 +72,25 @@ export default function ProductsPage() {
       </div>
 
       <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
-        <div className="rounded-2xl border border-slate-200 bg-white/80 p-5 shadow-sm">
+        <div className="surface rounded-2xl p-5">
           <p className="text-sm text-slate-500">SKUs</p>
           <p className="mt-2 text-2xl font-semibold text-slate-900">
             {inventorySummary.totalSkus}
           </p>
         </div>
-        <div className="rounded-2xl border border-slate-200 bg-white/80 p-5 shadow-sm">
+        <div className="surface rounded-2xl p-5">
           <p className="text-sm text-slate-500">Units in Stock</p>
           <p className="mt-2 text-2xl font-semibold text-slate-900">
             {inventorySummary.totalUnits}
           </p>
         </div>
-        <div className="rounded-2xl border border-slate-200 bg-white/80 p-5 shadow-sm">
+        <div className="surface rounded-2xl p-5">
           <p className="text-sm text-slate-500">Low Stock SKUs</p>
           <p className="mt-2 text-2xl font-semibold text-orange-700">
             {inventorySummary.lowStock}
           </p>
         </div>
-        <div className="rounded-2xl border border-slate-200 bg-white/80 p-5 shadow-sm">
+        <div className="surface rounded-2xl p-5">
           <p className="text-sm text-slate-500">Est. Inventory Value</p>
           <p className="mt-2 text-2xl font-semibold text-emerald-700">
             {money.format(inventorySummary.estInventoryValue)}
@@ -93,12 +98,12 @@ export default function ProductsPage() {
         </div>
       </div>
 
-      <div className="rounded-2xl border border-slate-200 bg-white/80 p-6 shadow-sm">
+      <div className="surface rounded-2xl p-6">
         <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
           <select
             value={categoryFilter}
             onChange={(event) => setCategoryFilter(event.target.value)}
-            className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900"
+            className="field text-sm"
           >
             <option value="all">All categories</option>
             {categories.map((category) => (
@@ -110,8 +115,10 @@ export default function ProductsPage() {
 
           <select
             value={stockView}
-            onChange={(event) => setStockView(event.target.value as "all" | "low")}
-            className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900"
+            onChange={(event) =>
+              setStockView(event.target.value as "all" | "low")
+            }
+            className="field text-sm"
           >
             <option value="all">All stock levels</option>
             <option value="low">Low stock only (20 or less)</option>
@@ -122,15 +129,15 @@ export default function ProductsPage() {
               setCategoryFilter("all");
               setStockView("all");
             }}
-            className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-700 hover:bg-slate-100"
+            className="btn-secondary text-sm"
           >
             Clear filters
           </button>
         </div>
       </div>
 
-      <div className="overflow-x-auto rounded-2xl border border-slate-200 bg-white/80 p-4 shadow-sm">
-        <table className="min-w-full table-auto">
+      <div className="surface overflow-x-auto rounded-2xl p-4">
+        <table className="data-table min-w-full table-auto">
           <thead>
             <tr className="text-left text-sm text-slate-600">
               <th className="px-3 py-2">Product</th>
@@ -142,7 +149,7 @@ export default function ProductsPage() {
           </thead>
           <tbody>
             {filteredProducts.map((product) => (
-              <tr key={product._id} className="border-t border-slate-100 text-sm">
+              <tr key={product._id} className="text-sm">
                 <td className="px-3 py-2 font-medium text-slate-900">
                   {product.name}
                 </td>
@@ -165,7 +172,10 @@ export default function ProductsPage() {
             ))}
             {!isLoading && filteredProducts.length === 0 && (
               <tr>
-                <td colSpan={5} className="px-3 py-8 text-center text-sm text-slate-500">
+                <td
+                  colSpan={5}
+                  className="px-3 py-8 text-center text-sm text-slate-500"
+                >
                   No products match your filters.
                 </td>
               </tr>
