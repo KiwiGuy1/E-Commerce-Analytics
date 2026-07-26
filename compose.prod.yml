@@ -1,0 +1,30 @@
+services:
+  db:
+    ports:
+      - "${POSTGRES_PORT:-5433}:5432"
+
+  api:
+    build:
+      target: production
+    ports:
+      - "5000:5000"
+    command: >
+      sh -c "
+      npm run prisma:migrate:deploy &&
+      npm run start
+      "
+
+  simulator:
+    build:
+      target: production
+    command: npm run start
+
+  web:
+    build:
+      target: production
+    ports:
+      - "3000:3000"
+
+  test:
+    profiles:
+      - disabled

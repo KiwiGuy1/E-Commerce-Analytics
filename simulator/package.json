@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "nodemon --watch src --ext ts --exec ts-node src/index.ts",
-    "start": "ts-node src/index.ts",
+    "build": "tsc",
+    "start": "node dist/src/index.js",
     "typecheck": "tsc --noEmit",
     "prisma:generate": "prisma generate"
   },

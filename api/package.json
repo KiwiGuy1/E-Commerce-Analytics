@@ -6,9 +6,12 @@
     "test": "jest",
     "test:integration": "node -e \"process.env.RUN_INTEGRATION_TESTS='true'; require('child_process').execSync('jest src/controllers/analyticsController.integration.test.ts --runInBand', { stdio: 'inherit' });\"",
     "dev": "nodemon --watch src --ext ts --exec ts-node src/server.ts",
+    "build": "tsc",
+    "start": "node dist/server.js",
     "typecheck": "tsc --noEmit",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev",
+    "prisma:migrate:deploy": "prisma migrate deploy",
     "prisma:seed": "ts-node prisma/seed.ts",
     "prisma:studio": "prisma studio"
   },

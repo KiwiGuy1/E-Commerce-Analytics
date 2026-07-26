@@ -8,25 +8,13 @@
   "scripts": {
     "setup": "node scripts/setup-env.mjs && npm install && npm --prefix api ci && npm --prefix simulator ci && npm --prefix web ci",
     "setup:env": "node scripts/setup-env.mjs",
-    "db:up": "docker compose up -d db",
-    "db:down": "docker compose stop db",
-    "db:studio": "npm run db:up && npm --prefix api run prisma:studio",
-    "docker:up": "docker compose up -d db api simulator web",
-    "docker:rebuild": "docker compose up -d --build db api simulator web",
-    "docker:down": "docker compose down",
-    "docker:logs": "docker compose logs -f --tail=150",
-    "docker:test": "docker compose up -d db && docker compose run --rm test",
-    "dev": "concurrently -n api,simulator,web \"npm --prefix api run dev\" \"npm --prefix simulator run dev\" \"npm --prefix web run dev\"",
-    "dev:api": "npm --prefix api run dev",
-    "dev:simulator": "npm --prefix simulator run dev",
-    "dev:web": "npm --prefix web run dev",
-    "prisma:migrate": "npm --prefix api run prisma:migrate",
-    "prisma:seed": "npm --prefix api run prisma:seed",
-    "test": "npm --prefix api run test",
-    "test:integration": "npm --prefix api run test:integration",
-    "lint": "npm --prefix web run lint"
-  },
-  "devDependencies": {
-    "concurrently": "^9.0.1"
+    "env:dev": "node scripts/use-env.mjs development",
+    "env:prod": "node scripts/use-env.mjs production",
+    "dev": "docker compose --env-file .env.development -f compose.yml -f compose.dev.yml up -d --build db api simulator web",
+    "prod": "docker compose --env-file .env.production -f compose.yml -f compose.prod.yml up -d --build db api simulator web",
+    "logs:dev": "docker compose --env-file .env.development -f compose.yml -f compose.dev.yml logs -f --tail=150",
+    "logs:prod": "docker compose --env-file .env.production -f compose.yml -f compose.prod.yml logs -f --tail=150",
+    "down:dev": "docker compose --env-file .env.development -f compose.yml -f compose.dev.yml down",
+    "down:prod": "docker compose --env-file .env.production -f compose.yml -f compose.prod.yml down"
   }
 }
